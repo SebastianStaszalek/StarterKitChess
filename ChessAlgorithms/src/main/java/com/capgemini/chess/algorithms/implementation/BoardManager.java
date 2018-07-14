@@ -233,13 +233,24 @@ public class BoardManager {
 
 	private Move validateMove(Coordinate from, Coordinate to) throws InvalidMoveException, KingInCheckException {
 		// TODO please add implementation here
+		//FROM
 		validateIfCoordinateIsOnTheBoard(from);
+		validateIfSpotIsNotEmpty(from);
+		validateIfMoveIsNotPerformedOnTheSameSpot(from, to);
+		
+		//TO
 		
 		return null;
 	}
 
-	//my private method
-	//check also if coordinates are different than null
+	//TODO: czy musimy tutaj sprawdzac nulla?
+	private void validateIfMoveIsNotPerformedOnTheSameSpot(Coordinate from, Coordinate to) throws InvalidMoveException {
+		if (from.equals(to))
+			throw new InvalidMoveException();
+		
+	}
+
+	//TODO: sprawdzic czy wartosc podawana nie jest nullem?
 	private void validateIfCoordinateIsOnTheBoard(Coordinate from) throws InvalidMoveException {
 		final int COORDINATE_BOTTOM = 0;
 		final int COORDINATE_TOP = 7;
@@ -250,13 +261,18 @@ public class BoardManager {
 		if (!isBetween(COORDINATE_BOTTOM, x, COORDINATE_TOP) || !isBetween(COORDINATE_BOTTOM, y, COORDINATE_TOP)) {
 			throw new InvalidMoveException();
 		}
-		
-		
 	}
-	//my private method
+	
+	//TODO: umiescic w odpowiednim miejscu
 	private boolean isBetween(int bottom, int value, int top) {
         return bottom<=value && value<=top;
     }
+	
+	//TODO: umiescic w odpowiednim miejscu
+	private void validateIfSpotIsNotEmpty(Coordinate from) throws InvalidMoveException {
+		if (this.board.getPieceAt(from) == null)
+			throw new InvalidMoveException();
+	}
 
 	private boolean isKingInCheck(Color kingColor) {
 
