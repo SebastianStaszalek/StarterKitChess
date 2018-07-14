@@ -232,10 +232,31 @@ public class BoardManager {
 	}
 
 	private Move validateMove(Coordinate from, Coordinate to) throws InvalidMoveException, KingInCheckException {
-
 		// TODO please add implementation here
+		validateIfCoordinateIsOnTheBoard(from);
+		
 		return null;
 	}
+
+	//my private method
+	//check also if coordinates are different than null
+	private void validateIfCoordinateIsOnTheBoard(Coordinate from) throws InvalidMoveException {
+		final int COORDINATE_BOTTOM = 0;
+		final int COORDINATE_TOP = 7;
+		
+		int x = from.getX();
+		int y = from.getY();
+		//TODO: zrobic nowe bledy rozszerzajace InvalidMoveException
+		if (!isBetween(COORDINATE_BOTTOM, x, COORDINATE_TOP) || !isBetween(COORDINATE_BOTTOM, y, COORDINATE_TOP)) {
+			throw new InvalidMoveException();
+		}
+		
+		
+	}
+	//my private method
+	private boolean isBetween(int bottom, int value, int top) {
+        return bottom<=value && value<=top;
+    }
 
 	private boolean isKingInCheck(Color kingColor) {
 
