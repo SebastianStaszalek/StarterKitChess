@@ -240,6 +240,11 @@ public class BoardManager {
 		
 		//TO
 		
+		//MOVE TYPE VALIDATION
+		PieceTypeFactory pieceTypeFactory = new PieceTypeFactory();
+		PieceTypeMoveValidator validator = pieceTypeFactory.getPieceTypeValidator(this.board, from);
+		validator.validatePieceTypeMove(from, to);
+
 		return null;
 	}
 
