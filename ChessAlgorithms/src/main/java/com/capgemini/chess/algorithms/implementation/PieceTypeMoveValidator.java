@@ -5,6 +5,6 @@ import com.capgemini.chess.algorithms.implementation.exceptions.InvalidMoveExcep
 
 public interface PieceTypeMoveValidator {
 	
-	 void validatePieceTypeMove(Coordinate from, Coordinate to) throws InvalidMoveException;
+	 void validateIfMoveIsValid(Coordinate from, Coordinate to) throws InvalidMoveException;
 
 }
