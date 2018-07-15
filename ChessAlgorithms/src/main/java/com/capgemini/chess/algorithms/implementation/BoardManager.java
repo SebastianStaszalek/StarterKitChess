@@ -230,9 +230,9 @@ public class BoardManager {
 		Move lastMove = this.board.getMoveHistory().get(this.board.getMoveHistory().size() - 1);
 		this.board.setPieceAt(null, lastMove.getTo());
 	}
-
+	
 	private Move validateMove(Coordinate from, Coordinate to) throws InvalidMoveException, KingInCheckException {
-		// TODO please add implementation here
+		// TODO czy lepiej pobrac sobie niektore wartosci z from i to wczesniej?
 		//FROM
 		validateIfCoordinateIsOnTheBoard(from);
 		validateIfSpotIsNotEmpty(from);
@@ -247,14 +247,7 @@ public class BoardManager {
 
 		return null;
 	}
-
-	//TODO: czy musimy tutaj sprawdzac nulla?
-	private void validateIfMoveIsNotPerformedOnTheSameSpot(Coordinate from, Coordinate to) throws InvalidMoveException {
-		if (from.equals(to))
-			throw new InvalidMoveException();
-		
-	}
-
+	
 	//TODO: sprawdzic czy wartosc podawana nie jest nullem?
 	private void validateIfCoordinateIsOnTheBoard(Coordinate from) throws InvalidMoveException {
 		final int COORDINATE_BOTTOM = 0;
@@ -278,6 +271,12 @@ public class BoardManager {
 		if (this.board.getPieceAt(from) == null)
 			throw new InvalidMoveException();
 	}
+	
+	//TODO: czy musimy tutaj sprawdzac nulla?
+		private void validateIfMoveIsNotPerformedOnTheSameSpot(Coordinate from, Coordinate to) throws InvalidMoveException {
+			if (from.equals(to))
+				throw new InvalidMoveException();
+		}
 
 	private boolean isKingInCheck(Color kingColor) {
 
