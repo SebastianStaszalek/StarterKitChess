@@ -24,8 +24,7 @@ public class KingMoveValidator implements PieceTypeMoveValidator {
 
 	@Override
 	public void validatePath(Board board, Coordinate from, Coordinate to) throws KingInvalidMoveException {
-		// TODO Auto-generated method stub
-		
+		// King can move only one place so we only need to check "to" coordinate
 	}
 
 	

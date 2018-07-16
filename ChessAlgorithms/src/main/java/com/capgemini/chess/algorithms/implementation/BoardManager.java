@@ -244,6 +244,7 @@ public class BoardManager {
 		PieceTypeFactory pieceTypeFactory = new PieceTypeFactory();
 		PieceTypeMoveValidator validator = pieceTypeFactory.getPieceTypeValidator(this.board, from);
 		validator.validateIfMoveIsValid(from, to);
+		validator.validatePath(this.board, from, to);
 
 		return null;
 	}

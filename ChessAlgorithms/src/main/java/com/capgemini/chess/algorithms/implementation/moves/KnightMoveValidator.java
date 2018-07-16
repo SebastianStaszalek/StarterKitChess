@@ -24,8 +24,8 @@ public class KnightMoveValidator implements PieceTypeMoveValidator {
 
 	@Override
 	public void validatePath(Board board, Coordinate from, Coordinate to) throws KnightInvalidMoveException {
-		// TODO Auto-generated method stub
-		
+		//Knight can jump over Pieces so implementation is superfluous
+		return;
 	}
 
 }

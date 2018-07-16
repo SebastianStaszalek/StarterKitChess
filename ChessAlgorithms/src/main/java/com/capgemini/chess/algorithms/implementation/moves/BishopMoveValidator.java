@@ -26,7 +26,6 @@ public class BishopMoveValidator implements PieceTypeMoveValidator {
 	@Override
 	public void validatePath(Board board, Coordinate from, Coordinate to) throws BishopInvalidMoveException {
 		
-		
 		int xFrom = from.getX();
 		int yFrom = from.getY();
 		
@@ -45,16 +44,18 @@ public class BishopMoveValidator implements PieceTypeMoveValidator {
 		}
 		
 		if (lengthOfPath - 1 > 0) {
-			for(int i = 1; i < lengthOfPath-1; i++) {
-				if(board.getPieceAt(new Coordinate(1,1)) == null) {
+			
+			int xToCheck = xFrom + (1*xDirection);
+			int yToCheck = yFrom + (1*yDirection);
+			
+			for(int i = 0; i < lengthOfPath-1; i++) {
+				if(board.getPieceAt(new Coordinate(xToCheck,yToCheck)) != null) {
 					throw new BishopInvalidMoveException("The path is not clear for Bishop");
 				}
+				xToCheck += 1 * xDirection; 
+				yToCheck += 1 * yDirection;
 			}
 		}
 		
-		
-		
-		
 	}
-	
 }
