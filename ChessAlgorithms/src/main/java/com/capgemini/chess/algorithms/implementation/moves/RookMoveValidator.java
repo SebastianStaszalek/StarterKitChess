@@ -16,7 +16,7 @@ public class RookMoveValidator implements PieceTypeMoveValidator {
 		int xTo = to.getX();
 		int yTo = to.getY();
 
-		if (xFrom != xTo || yFrom != yTo)
+		if (!((xFrom == xTo) || (yFrom == yTo)))
 			throw new RookInvalidMoveException("Invalid Rook move");
 
 	}

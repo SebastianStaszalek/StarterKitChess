@@ -19,7 +19,7 @@ public class QueenMoveValidator implements PieceTypeMoveValidator {
 		int xDiff = Math.abs(xFrom - xTo);
 		int yDiff = Math.abs(yFrom - yTo);
 
-		if ((xDiff != yDiff) || (xFrom != xTo) || (yFrom != yTo))
+		if (!(xDiff == yDiff || xFrom == xTo || yFrom == yTo))
 			throw new QueenInvalidMoveException("Invalid Queen move");
 
 	}
