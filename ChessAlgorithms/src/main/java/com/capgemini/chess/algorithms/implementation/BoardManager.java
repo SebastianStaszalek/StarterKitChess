@@ -13,6 +13,7 @@ import com.capgemini.chess.algorithms.data.enums.PieceType;
 import com.capgemini.chess.algorithms.data.generated.Board;
 import com.capgemini.chess.algorithms.implementation.exceptions.InvalidMoveException;
 import com.capgemini.chess.algorithms.implementation.exceptions.KingInCheckException;
+import com.capgemini.chess.algorithms.implementation.exceptions.NoKingException;
 
 /**
  * Class for managing of basic operations on the Chess Board.
@@ -230,58 +231,140 @@ public class BoardManager {
 		Move lastMove = this.board.getMoveHistory().get(this.board.getMoveHistory().size() - 1);
 		this.board.setPieceAt(null, lastMove.getTo());
 	}
-	
+
 	private Move validateMove(Coordinate from, Coordinate to) throws InvalidMoveException, KingInCheckException {
-		// TODO czy lepiej pobrac sobie niektore wartosci z from i to wczesniej?
-		//FROM
+		Move performedMove = new Move();
+
+		// FROM
 		validateIfCoordinateIsOnTheBoard(from);
 		validateIfSpotIsNotEmpty(from);
+		validateIfRightPlayerIsMoving(this.board, from);
+
+		// FROM - TO
 		validateIfMoveIsNotPerformedOnTheSameSpot(from, to);
-		
-		//TO
-		
-		//MOVE TYPE VALIDATION
+		checkTheTargetSpot(this.board, from, to);
+
+		// MOVE TYPE VALIDATION
 		PieceTypeFactory pieceTypeFactory = new PieceTypeFactory();
 		PieceTypeMoveValidator validator = pieceTypeFactory.getPieceTypeValidator(this.board, from);
 		validator.validateIfMoveIsValid(from, to);
 		validator.validatePath(this.board, from, to);
 
-		return null;
+		// KING VALIDATION
+
+		// TO
+		setMoveType(performedMove, from, to);
+
+		performedMove.setFrom(from);
+		performedMove.setTo(to);
+		performedMove.setMovedPiece(this.board.getPieceAt(from));
+		return performedMove;
 	}
-	
-	//TODO: sprawdzic czy wartosc podawana nie jest nullem?
+
+	private Coordinate getKingPosition(Board board, Color color) {
+		Coordinate kingCoordinate = null;
+		for (int x = 0; x < Board.SIZE; x++) {
+			for (int y = 0; y < Board.SIZE; y++) {
+				Piece testedPiece = board.getPieceAt(new Coordinate(x, y));
+				if (PieceType.KING == testedPiece.getType() && color == testedPiece.getColor()) {
+					kingCoordinate = new Coordinate(x, y);
+				}
+			}
+		}
+
+//		if (kingCoordinate == null) {
+//			throw new NoKingException();
+//		}
+		return kingCoordinate;
+	}
+
+	private void validateIfRightPlayerIsMoving(Board board, Coordinate from) throws InvalidMoveException {
+		Color playerColor = calculateNextMoveColor();
+
+		if (playerColor != board.getPieceAt(from).getColor()) {
+			throw new InvalidMoveException("Wrong move order");
+		}
+
+	}
+
+	private void setMoveType(Move performedMove, Coordinate from, Coordinate to) {
+		Piece targetPiece = board.getPieceAt(to);
+		if (targetPiece == null) {
+			performedMove.setType(MoveType.ATTACK);
+		} else {
+			performedMove.setType(MoveType.CAPTURE);
+		}
+
+	}
+
+	private void checkTheTargetSpot(Board board, Coordinate from, Coordinate to) throws InvalidMoveException {
+		Piece targetPiece = board.getPieceAt(to);
+		if (targetPiece == null) {
+			return;
+		}
+
+		Color playerColor = board.getPieceAt(from).getColor();
+		Color targetColor = board.getPieceAt(to).getColor();
+
+		if (playerColor == targetColor) {
+			throw new InvalidMoveException("You cannto capture your own Piece!");
+		}
+	}
+
+	// TODO: sprawdzic czy wartosc podawana nie jest nullem?
 	private void validateIfCoordinateIsOnTheBoard(Coordinate from) throws InvalidMoveException {
 		final int COORDINATE_BOTTOM = 0;
 		final int COORDINATE_TOP = 7;
-		
+
 		int x = from.getX();
 		int y = from.getY();
-		//TODO: zrobic nowe bledy rozszerzajace InvalidMoveException
+		// TODO: zrobic nowe bledy rozszerzajace InvalidMoveException
 		if (!isBetween(COORDINATE_BOTTOM, x, COORDINATE_TOP) || !isBetween(COORDINATE_BOTTOM, y, COORDINATE_TOP)) {
-			throw new InvalidMoveException();
+			throw new InvalidMoveException("Place is not on the board!");
 		}
 	}
-	
-	//TODO: umiescic w odpowiednim miejscu
+
+	// TODO: umiescic w odpowiednim miejscu
 	private boolean isBetween(int bottom, int value, int top) {
-        return bottom<=value && value<=top;
-    }
-	
-	//TODO: umiescic w odpowiednim miejscu
+		return bottom <= value && value <= top;
+	}
+
+	// TODO: umiescic w odpowiednim miejscu
 	private void validateIfSpotIsNotEmpty(Coordinate from) throws InvalidMoveException {
 		if (this.board.getPieceAt(from) == null)
-			throw new InvalidMoveException();
+			throw new InvalidMoveException("Place is empty!");
 	}
-	
-	//TODO: czy musimy tutaj sprawdzac nulla?
-		private void validateIfMoveIsNotPerformedOnTheSameSpot(Coordinate from, Coordinate to) throws InvalidMoveException {
-			if (from.equals(to))
-				throw new InvalidMoveException();
-		}
+
+	// TODO: czy musimy tutaj sprawdzac nulla?
+	private void validateIfMoveIsNotPerformedOnTheSameSpot(Coordinate from, Coordinate to) throws InvalidMoveException {
+		if (from.equals(to))
+			throw new InvalidMoveException("Any move was performed!");
+	}
 
 	private boolean isKingInCheck(Color kingColor) {
 
-		// TODO please add implementation here
+		Coordinate kingPosition = getKingPosition(this.board, kingColor);
+		//boolean kingInCheck = false;
+
+		PieceTypeFactory pieceTypeFactory = new PieceTypeFactory();
+		PieceTypeMoveValidator validator;
+
+		for (int x = 0; x < Board.SIZE; x++) {
+			for (int y = 0; y < Board.SIZE; y++) {
+				if (this.board.getPieceAt(new Coordinate(x, y)) != null) {
+
+					validator = pieceTypeFactory.getPieceTypeValidator(this.board, new Coordinate(x, y));
+					try {
+						validator.validateIfMoveIsValid(new Coordinate(x, y), kingPosition);
+						validator.validatePath(this.board, new Coordinate(x, y), kingPosition);
+						return true;
+					} catch (InvalidMoveException e) {
+
+					}
+				}
+			}
+		}
+
 		return false;
 	}
 
