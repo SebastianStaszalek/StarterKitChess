@@ -369,7 +369,11 @@ public class BoardManager {
 	private boolean isKingInCheck(Color kingColor) {
 
 		Coordinate kingPosition = getKingPosition(this.board, kingColor);
-
+		
+		if (kingPosition == null) {
+			System.out.println("No King wasfound!!");
+		}
+		
 		PieceTypeFactory pieceTypeFactory = new PieceTypeFactory();
 		PieceTypeMoveValidator validator;
 
@@ -378,8 +382,9 @@ public class BoardManager {
 
 				Coordinate positionToCheck = new Coordinate(x, y);
 				Piece pieceToCheck = this.board.getPieceAt(positionToCheck);
-				
-				if (pieceToCheck != null && !kingPosition.equals(positionToCheck) && pieceToCheck.getColor() != kingColor) {
+
+				if (pieceToCheck != null && !kingPosition.equals(positionToCheck)
+						&& pieceToCheck.getColor() != kingColor) {
 
 					validator = pieceTypeFactory.getPieceTypeValidator(this.board, positionToCheck);
 					try {
@@ -397,8 +402,56 @@ public class BoardManager {
 
 	private boolean isAnyMoveValid(Color nextMoveColor) {
 
-		// TODO please add implementation here
+		PieceTypeFactory pieceTypeFactory = new PieceTypeFactory();
+		PieceTypeMoveValidator validator;
 
+		for (int x = 0; x < Board.SIZE; x++) {
+			for (int y = 0; y < Board.SIZE; y++) {
+
+				Coordinate positionFrom = new Coordinate(x, y);
+				Piece pieceToCheck = this.board.getPieceAt(positionFrom);
+
+				if (pieceToCheck != null && pieceToCheck.getColor() == nextMoveColor) {
+
+					for (int i = 0; i < Board.SIZE; i++) {
+						for (int j = 0; j < Board.SIZE; j++) {
+
+							Coordinate positionToCheck = new Coordinate(i, j);
+
+							if (!positionFrom.equals(positionToCheck)) {
+
+								validator = pieceTypeFactory.getPieceTypeValidator(this.board, positionFrom);
+								try {
+									validator.validateIfMoveIsValid(positionFrom, positionToCheck);
+									validator.validatePath(this.board, positionFrom, positionToCheck);
+
+									Piece fromPiece = this.board.getPieceAt(positionFrom);
+									Piece toPiece = this.board.getPieceAt(positionToCheck);
+
+									boolean kingInCheck = false;
+
+									this.board.setPieceAt(fromPiece, positionToCheck);
+									this.board.setPieceAt(null, positionFrom);
+
+									kingInCheck = isKingInCheck(nextMoveColor);
+									if (!kingInCheck) {
+										this.board.setPieceAt(fromPiece, positionFrom);
+										this.board.setPieceAt(toPiece, positionToCheck);
+										return true;
+									} else {
+										this.board.setPieceAt(fromPiece, positionFrom);
+										this.board.setPieceAt(toPiece, positionToCheck);
+									}
+
+								} catch (InvalidMoveException e) {
+									// ........................
+								}
+							}
+						}
+					}
+				}
+			}
+		}
 		return false;
 	}
 

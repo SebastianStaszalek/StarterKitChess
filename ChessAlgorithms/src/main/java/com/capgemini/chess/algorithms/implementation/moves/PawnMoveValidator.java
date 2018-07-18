@@ -37,7 +37,7 @@ public class PawnMoveValidator implements PieceTypeMoveValidator {
 		//check possible moves	
 		if ((pawnColor == Color.WHITE && yFrom == 1) || (pawnColor == Color.BLACK && yFrom == 6)) {
 			checkFirstPawnMove(board, from, to);
-		} else if (yFrom == yTo) {
+		} else if (xFrom == xTo) {
 			checkRegularPawnMove(from, to);
 		} else {
 			checkPawnCapture(board, from, to);
