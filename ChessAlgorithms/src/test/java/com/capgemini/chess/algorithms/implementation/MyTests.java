@@ -17,7 +17,7 @@ import com.capgemini.chess.algorithms.implementation.exceptions.moves.PawnInvali
 public class MyTests {
 
 	@Test
-	public void testPerformInvalidPawnMoveBackward() throws InvalidMoveException {
+	public void testPerformInvalidBlackPawnMoveBackward() throws InvalidMoveException {
 		// given
 		Board board = new Board();
 		board.getMoveHistory().add(createDummyMove(board));
@@ -35,6 +35,114 @@ public class MyTests {
 		}
 		// then
 		assertTrue(exceptionThrown);
+	}
+	
+	@Test
+	public void testPerformUnclearPathForBlackPawnMoving2Forward() throws InvalidMoveException {
+		// given
+		Board board = new Board();
+		board.getMoveHistory().add(createDummyMove(board));
+		board.setPieceAt(Piece.BLACK_PAWN, new Coordinate(3, 6));
+		board.setPieceAt(Piece.BLACK_KING, new Coordinate(0, 7));
+		board.setPieceAt(Piece.WHITE_PAWN, new Coordinate(3, 5));
+		board.setPieceAt(Piece.WHITE_KING, new Coordinate(7, 7));
+
+		// when
+		BoardManager boardManager = new BoardManager(board);
+		boolean exceptionThrown = false;
+		try {
+			boardManager.performMove(new Coordinate(3, 6), new Coordinate(3, 4));
+		} catch (InvalidMoveException e) {
+			exceptionThrown = e instanceof PawnInvalidMoveException;
+		}
+		// then
+		assertTrue(exceptionThrown);
+	}
+	
+	@Test
+	public void testPerformUnclearDestinationForBlackPawnMoving2Forward() throws InvalidMoveException {
+		// given
+		Board board = new Board();
+		board.getMoveHistory().add(createDummyMove(board));
+		board.setPieceAt(Piece.BLACK_PAWN, new Coordinate(3, 6));
+		board.setPieceAt(Piece.BLACK_KING, new Coordinate(0, 7));
+		board.setPieceAt(Piece.WHITE_PAWN, new Coordinate(3, 4));
+		board.setPieceAt(Piece.WHITE_KING, new Coordinate(7, 7));
+
+		// when
+		BoardManager boardManager = new BoardManager(board);
+		boolean exceptionThrown = false;
+		try {
+			boardManager.performMove(new Coordinate(3, 6), new Coordinate(3, 4));
+		} catch (InvalidMoveException e) {
+			exceptionThrown = e instanceof PawnInvalidMoveException;
+		}
+		// then
+		assertTrue(exceptionThrown);
+	}
+	
+	@Test
+	public void testPerformUnclearPathForWhitePawnMoving2Forward() throws InvalidMoveException {
+		// given
+		Board board = new Board();
+		
+		board.setPieceAt(Piece.BLACK_PAWN, new Coordinate(2, 2));
+		board.setPieceAt(Piece.BLACK_KING, new Coordinate(0, 7));
+		board.setPieceAt(Piece.WHITE_PAWN, new Coordinate(2, 1));
+		board.setPieceAt(Piece.WHITE_KING, new Coordinate(7, 7));
+
+		// when
+		BoardManager boardManager = new BoardManager(board);
+		boolean exceptionThrown = false;
+		try {
+			boardManager.performMove(new Coordinate(2, 1), new Coordinate(2, 3));
+		} catch (InvalidMoveException e) {
+			exceptionThrown = e instanceof PawnInvalidMoveException;
+		}
+		// then
+		assertTrue(exceptionThrown);
+	}
+	
+	@Test
+	public void testPerformUnclearDestinationForWhitePawnMoving2Forward() throws InvalidMoveException {
+		// given
+		Board board = new Board();
+		
+		board.setPieceAt(Piece.BLACK_PAWN, new Coordinate(2, 3));
+		board.setPieceAt(Piece.BLACK_KING, new Coordinate(0, 7));
+		board.setPieceAt(Piece.WHITE_PAWN, new Coordinate(2, 1));
+		board.setPieceAt(Piece.WHITE_KING, new Coordinate(7, 7));
+
+		// when
+		BoardManager boardManager = new BoardManager(board);
+		boolean exceptionThrown = false;
+		try {
+			boardManager.performMove(new Coordinate(2, 1), new Coordinate(2, 3));
+		} catch (InvalidMoveException e) {
+			exceptionThrown = e instanceof PawnInvalidMoveException;
+		}
+		// then
+		assertTrue(exceptionThrown);
+	}
+	
+	@Test
+	public void testPerformPawnCapture() throws InvalidMoveException {
+		// given
+		Board board = new Board();
+		board.getMoveHistory().add(createDummyMove(board));
+		board.setPieceAt(Piece.BLACK_PAWN, new Coordinate(4, 5));
+		board.setPieceAt(Piece.BLACK_PAWN, new Coordinate(5, 6));
+		board.setPieceAt(Piece.BLACK_KING, new Coordinate(0, 7));
+		board.setPieceAt(Piece.WHITE_KING, new Coordinate(7, 7));
+		board.setPieceAt(Piece.WHITE_PAWN, new Coordinate(5, 4));
+
+		// when
+		BoardManager boardManager = new BoardManager(board);
+		Move move = boardManager.performMove(new Coordinate(4, 5), new Coordinate(5, 4));
+
+		// then
+		assertEquals(MoveType.CAPTURE, move.getType());
+		assertEquals(Piece.BLACK_PAWN, move.getMovedPiece());
 	}
 
 	@Test

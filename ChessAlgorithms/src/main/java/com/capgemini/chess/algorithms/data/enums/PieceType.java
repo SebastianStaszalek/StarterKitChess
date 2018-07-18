@@ -8,9 +8,9 @@ package com.capgemini.chess.algorithms.data.enums;
  */
 public enum PieceType {
 	KING,
-    QUEEN,
-    BISHOP,
-    KNIGHT,
-    ROOK,
-    PAWN;
+    QUEEN, //hetman
+    BISHOP, //goniec
+    KNIGHT, //rycerz (kon)
+    ROOK, //wieza
+    PAWN; //pion
 }

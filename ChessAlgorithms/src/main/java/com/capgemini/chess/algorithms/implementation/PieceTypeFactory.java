@@ -12,13 +12,13 @@ import com.capgemini.chess.algorithms.implementation.moves.RookMoveValidator;
 
 public class PieceTypeFactory {
 
+	
 	public PieceTypeMoveValidator getPieceTypeValidator(Board board, Coordinate from) {
 		
 		PieceType pieceType = board.getPieceAt(from).getType();
 		
 		PieceTypeMoveValidator result = null;
 		
-		//TODO: na Enumach == jest wlasciwe??
 		if (pieceType == PieceType.PAWN) {
 			result = new PawnMoveValidator();
 		} else if (pieceType == PieceType.ROOK) {

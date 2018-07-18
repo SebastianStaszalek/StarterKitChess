@@ -8,7 +8,7 @@ package com.capgemini.chess.algorithms.data.enums;
  */
 public enum BoardState {
 	REGULAR,
-	CHECK,
-	CHECK_MATE,
-	STALE_MATE;
+	CHECK, //dac szacha
+	CHECK_MATE, // szach-mat
+	STALE_MATE; //dac pata / PAT
 }

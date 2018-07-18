@@ -283,11 +283,11 @@ public class BoardManager {
 		Coordinate kingCoordinate = null;
 		for (int x = 0; x < Board.SIZE; x++) {
 			for (int y = 0; y < Board.SIZE; y++) {
-
-				Piece testedPiece = board.getPieceAt(new Coordinate(x, y));
+				Coordinate coordinateToCheck = new Coordinate(x, y);
+				Piece testedPiece = board.getPieceAt(coordinateToCheck);
 				if (testedPiece != null) {
 					if (PieceType.KING == testedPiece.getType() && color == testedPiece.getColor()) {
-						kingCoordinate = new Coordinate(x, y);
+						kingCoordinate = coordinateToCheck;
 					}
 				}
 			}
@@ -424,7 +424,8 @@ public class BoardManager {
 								try {
 									validator.validateIfMoveIsValid(positionFrom, positionToCheck);
 									validator.validatePath(this.board, positionFrom, positionToCheck);
-
+									checkIfOnTheTargetSpotIsNotMyPiece(this.board, positionFrom, positionToCheck);
+									
 									Piece fromPiece = this.board.getPieceAt(positionFrom);
 									Piece toPiece = this.board.getPieceAt(positionToCheck);
 
