@@ -236,13 +236,13 @@ public class BoardManager {
 		Move performedMove = new Move();
 
 		// FROM
-		validateIfCoordinateIsOnTheBoard(from);
+		validateIfCoordinatesAreOnTheBoard(from, to);
 		validateIfSpotIsNotEmpty(from);
 		validateIfRightPlayerIsMoving(this.board, from);
 
 		// FROM - TO
 		validateIfMoveIsNotPerformedOnTheSameSpot(from, to);
-		checkTheTargetSpot(this.board, from, to);
+		checkIfOnTheTargetSpotIsNotMyPiece(this.board, from, to);
 
 		// MOVE TYPE VALIDATION
 		PieceTypeFactory pieceTypeFactory = new PieceTypeFactory();
@@ -250,7 +250,25 @@ public class BoardManager {
 		validator.validateIfMoveIsValid(from, to);
 		validator.validatePath(this.board, from, to);
 
-		// KING VALIDATION
+		// KING IN CHECK VALIDATION
+		Piece fromPiece = board.getPieceAt(from);
+		Piece toPiece = board.getPieceAt(to);
+
+		Color playerColor = this.board.getPieceAt(from).getColor();
+		boolean myKingInCheck = false;
+
+		this.board.setPieceAt(fromPiece, to);
+		this.board.setPieceAt(null, from);
+
+		myKingInCheck = isKingInCheck(playerColor);
+		if (myKingInCheck) {
+			this.board.setPieceAt(fromPiece, from);
+			this.board.setPieceAt(toPiece, to);
+			throw new KingInCheckException();
+		} else {
+			this.board.setPieceAt(fromPiece, from);
+			this.board.setPieceAt(toPiece, to);
+		}
 
 		// TO
 		setMoveType(performedMove, from, to);
@@ -265,16 +283,15 @@ public class BoardManager {
 		Coordinate kingCoordinate = null;
 		for (int x = 0; x < Board.SIZE; x++) {
 			for (int y = 0; y < Board.SIZE; y++) {
+
 				Piece testedPiece = board.getPieceAt(new Coordinate(x, y));
-				if (PieceType.KING == testedPiece.getType() && color == testedPiece.getColor()) {
-					kingCoordinate = new Coordinate(x, y);
+				if (testedPiece != null) {
+					if (PieceType.KING == testedPiece.getType() && color == testedPiece.getColor()) {
+						kingCoordinate = new Coordinate(x, y);
+					}
 				}
 			}
 		}
-
-//		if (kingCoordinate == null) {
-//			throw new NoKingException();
-//		}
 		return kingCoordinate;
 	}
 
@@ -297,7 +314,8 @@ public class BoardManager {
 
 	}
 
-	private void checkTheTargetSpot(Board board, Coordinate from, Coordinate to) throws InvalidMoveException {
+	private void checkIfOnTheTargetSpotIsNotMyPiece(Board board, Coordinate from, Coordinate to)
+			throws InvalidMoveException {
 		Piece targetPiece = board.getPieceAt(to);
 		if (targetPiece == null) {
 			return;
@@ -312,15 +330,22 @@ public class BoardManager {
 	}
 
 	// TODO: sprawdzic czy wartosc podawana nie jest nullem?
-	private void validateIfCoordinateIsOnTheBoard(Coordinate from) throws InvalidMoveException {
+	private void validateIfCoordinatesAreOnTheBoard(Coordinate from, Coordinate to) throws InvalidMoveException {
 		final int COORDINATE_BOTTOM = 0;
 		final int COORDINATE_TOP = 7;
 
-		int x = from.getX();
-		int y = from.getY();
-		// TODO: zrobic nowe bledy rozszerzajace InvalidMoveException
-		if (!isBetween(COORDINATE_BOTTOM, x, COORDINATE_TOP) || !isBetween(COORDINATE_BOTTOM, y, COORDINATE_TOP)) {
-			throw new InvalidMoveException("Place is not on the board!");
+		int xFrom = from.getX();
+		int yFrom = from.getY();
+
+		int xTo = to.getX();
+		int yTo = to.getY();
+
+		if (!isBetween(COORDINATE_BOTTOM, xFrom, COORDINATE_TOP)
+				|| !isBetween(COORDINATE_BOTTOM, yFrom, COORDINATE_TOP)) {
+			throw new InvalidMoveException("Starting place is not on the board!");
+		}
+		if (!isBetween(COORDINATE_BOTTOM, xTo, COORDINATE_TOP) || !isBetween(COORDINATE_BOTTOM, yTo, COORDINATE_TOP)) {
+			throw new InvalidMoveException("Final place is not on the board!");
 		}
 	}
 
@@ -344,27 +369,29 @@ public class BoardManager {
 	private boolean isKingInCheck(Color kingColor) {
 
 		Coordinate kingPosition = getKingPosition(this.board, kingColor);
-		//boolean kingInCheck = false;
 
 		PieceTypeFactory pieceTypeFactory = new PieceTypeFactory();
 		PieceTypeMoveValidator validator;
 
 		for (int x = 0; x < Board.SIZE; x++) {
 			for (int y = 0; y < Board.SIZE; y++) {
-				if (this.board.getPieceAt(new Coordinate(x, y)) != null) {
 
-					validator = pieceTypeFactory.getPieceTypeValidator(this.board, new Coordinate(x, y));
+				Coordinate positionToCheck = new Coordinate(x, y);
+				Piece pieceToCheck = this.board.getPieceAt(positionToCheck);
+				
+				if (pieceToCheck != null && !kingPosition.equals(positionToCheck) && pieceToCheck.getColor() != kingColor) {
+
+					validator = pieceTypeFactory.getPieceTypeValidator(this.board, positionToCheck);
 					try {
-						validator.validateIfMoveIsValid(new Coordinate(x, y), kingPosition);
-						validator.validatePath(this.board, new Coordinate(x, y), kingPosition);
+						validator.validateIfMoveIsValid(positionToCheck, kingPosition);
+						validator.validatePath(this.board, positionToCheck, kingPosition);
 						return true;
 					} catch (InvalidMoveException e) {
-
+						// ........................
 					}
 				}
 			}
 		}
-
 		return false;
 	}
 
