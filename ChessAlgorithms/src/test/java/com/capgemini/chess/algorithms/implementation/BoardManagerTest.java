@@ -250,14 +250,14 @@ public class BoardManagerTest {
 		// given
 		Board board = new Board();
 		board.getMoveHistory().add(createDummyMove(board));
-		board.setPieceAt(Piece.BLACK_ROOK, new Coordinate(1, 4));
-		board.setPieceAt(Piece.WHITE_KNIGHT, new Coordinate(5, 4));
+		board.setPieceAt(Piece.BLACK_ROOK, new Coordinate(3, 7));
+		board.setPieceAt(Piece.WHITE_KNIGHT, new Coordinate(2, 7));
 		board.setPieceAt(Piece.BLACK_KING, new Coordinate(0,7));
 		board.setPieceAt(Piece.WHITE_KING, new Coordinate(7,7));
 		
 		// when
 		BoardManager boardManager = new BoardManager(board);
-		Move move = boardManager.performMove(new Coordinate(1, 4), new Coordinate(5, 4));
+		Move move = boardManager.performMove(new Coordinate(3, 7), new Coordinate(2, 7));
 		
 		// then
 		assertEquals(MoveType.CAPTURE, move.getType());
@@ -332,7 +332,6 @@ public class BoardManagerTest {
 		} catch (InvalidMoveException e) {
 			exceptionThrown = true;
 		}
-		
 		// then 
 		assertTrue(exceptionThrown);
 	}
@@ -664,8 +663,6 @@ public class BoardManagerTest {
 	public void testUpdateBoardStateRegular() throws InvalidMoveException {
 		// given
 		BoardManager boardManager = new BoardManager();
-		
-		//boardManager.performMove(new Coordinate(0,1), new Coordinate(0,2));
 		
 		// when
 		BoardState boardState = boardManager.updateBoardState();
