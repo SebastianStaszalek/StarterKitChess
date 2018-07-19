@@ -9,7 +9,5 @@ public class QueenInvalidMoveException extends InvalidMoveException {
 	public QueenInvalidMoveException(String message) {
 		super(message);
 	}
-	
-	
 
 }

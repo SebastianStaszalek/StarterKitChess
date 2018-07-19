@@ -14,15 +14,13 @@ import com.capgemini.chess.algorithms.data.generated.Board;
 import com.capgemini.chess.algorithms.implementation.exceptions.InvalidMoveException;
 import com.capgemini.chess.algorithms.implementation.exceptions.KingInCheckException;
 import com.capgemini.chess.algorithms.implementation.exceptions.moves.BishopInvalidMoveException;
-import com.capgemini.chess.algorithms.implementation.exceptions.moves.KingInvalidMoveException;
 import com.capgemini.chess.algorithms.implementation.exceptions.moves.PawnInvalidMoveException;
 import com.capgemini.chess.algorithms.implementation.exceptions.moves.QueenInvalidMoveException;
 
 public class MyTests {
 	
-	//TESTING TEST
 	@Test
-	public void testMATE() throws InvalidMoveException {
+	public void testPerformInvalidPawnDestination() throws InvalidMoveException {
 		// given
 		Board board = new Board();
 		board.getMoveHistory().add(createDummyMove(board));
@@ -467,7 +465,6 @@ public class MyTests {
 		} catch (InvalidMoveException e) {
 			exceptionThrown = true;
 		}
-
 		// then
 		assertTrue(exceptionThrown);
 	}
@@ -487,7 +484,6 @@ public class MyTests {
 		} catch (InvalidMoveException e) {
 			exceptionThrown = true;
 		}
-
 		// then
 		assertTrue(exceptionThrown);
 	}
@@ -545,7 +541,6 @@ public class MyTests {
 		assertEquals(BoardState.CHECK_MATE, boardState);
 	}
 
-	// TODO: nie dziala!
 	@Test
 	public void testUpdateBoardStaleMateAdvancedSituation() throws InvalidMoveException {
 		// given
@@ -677,6 +672,7 @@ public class MyTests {
 		assertEquals(BoardState.REGULAR, boardState);
 	}
 
+	
 	private Move createDummyMove(Board board) {
 
 		Move move = new Move();
@@ -694,5 +690,4 @@ public class MyTests {
 		board.setPieceAt(null, new Coordinate(0, 0));
 		return move;
 	}
-
 }

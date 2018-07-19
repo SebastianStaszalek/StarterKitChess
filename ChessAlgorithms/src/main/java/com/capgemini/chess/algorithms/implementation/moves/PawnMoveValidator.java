@@ -34,8 +34,8 @@ public class PawnMoveValidator implements PieceTypeMoveValidator {
 		if (pawnColor == Color.WHITE && yTo < yFrom) {
 			throw new PawnInvalidMoveException("Pawn cannot move backward!");
 		}
-		// TODO: co jesli startuje z pierwszej pozycji i chce bic??
-		// check possible moves
+
+		// check possible scenarios
 		if ((pawnColor == Color.WHITE && yFrom == 1) || (pawnColor == Color.BLACK && yFrom == 6)) {
 			if (xFrom != xTo && xDiff == 1 && yDiff == 1) {
 				checkPawnCaptureWhenItsHisFirstMove(board, to);
@@ -108,7 +108,6 @@ public class PawnMoveValidator implements PieceTypeMoveValidator {
 		}
 	}
 
-	// TODO: trzeba bedzie jeszcze sprawdzic kolor?
 	private void checkPawnCapture(Board board, Coordinate from, Coordinate to) throws PawnInvalidMoveException {
 		int xFrom = from.getX();
 		int yFrom = from.getY();
@@ -122,6 +121,5 @@ public class PawnMoveValidator implements PieceTypeMoveValidator {
 		if (board.getPieceAt(to) == null || xDiff != 1 || yDiff != 1) {
 			throw new PawnInvalidMoveException("Invalid Pawn move");
 		}
-
 	}
 }

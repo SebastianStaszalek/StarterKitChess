@@ -12,13 +12,12 @@ import com.capgemini.chess.algorithms.implementation.moves.RookMoveValidator;
 
 public class PieceTypeFactory {
 
-	
-	public PieceTypeMoveValidator getPieceTypeValidator(Board board, Coordinate from) {
-		
+	public static PieceTypeMoveValidator getPieceTypeValidator(Board board, Coordinate from) {
+
 		PieceType pieceType = board.getPieceAt(from).getType();
-		
+
 		PieceTypeMoveValidator result = null;
-		
+
 		if (pieceType == PieceType.PAWN) {
 			result = new PawnMoveValidator();
 		} else if (pieceType == PieceType.ROOK) {
@@ -31,8 +30,8 @@ public class PieceTypeFactory {
 			result = new QueenMoveValidator();
 		} else if (pieceType == PieceType.KING) {
 			result = new KingMoveValidator();
-		} 
-		
+		}
+
 		return result;
 	}
 }

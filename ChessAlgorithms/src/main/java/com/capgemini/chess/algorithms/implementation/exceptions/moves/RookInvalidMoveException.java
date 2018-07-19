@@ -9,7 +9,5 @@ public class RookInvalidMoveException extends InvalidMoveException {
 	public RookInvalidMoveException(String message) {
 		super(message);
 	}
-	
-	
 
 }

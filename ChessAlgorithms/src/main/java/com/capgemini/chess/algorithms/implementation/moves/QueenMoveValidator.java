@@ -4,7 +4,6 @@ import com.capgemini.chess.algorithms.data.Coordinate;
 import com.capgemini.chess.algorithms.data.generated.Board;
 import com.capgemini.chess.algorithms.implementation.PieceTypeMoveValidator;
 import com.capgemini.chess.algorithms.implementation.exceptions.moves.QueenInvalidMoveException;
-import com.capgemini.chess.algorithms.implementation.exceptions.moves.RookInvalidMoveException;
 
 public class QueenMoveValidator implements PieceTypeMoveValidator {
 
@@ -37,7 +36,7 @@ public class QueenMoveValidator implements PieceTypeMoveValidator {
 		int xDirection = 0;
 		int yDirection = 0;
 
-		// if queen is travelling horizontally
+		// direction if queen is moving horizontally
 		if (yTo == yFrom) {
 			lengthOfPath = Math.abs(xTo - xFrom);
 			if (xTo - xFrom < 0) {
@@ -45,7 +44,7 @@ public class QueenMoveValidator implements PieceTypeMoveValidator {
 			} else {
 				xDirection = 1;
 			}
-		// if queen is travelling vertically
+		// direction if queen is moving vertically
 		} else if (xTo == xFrom) {
 			lengthOfPath = Math.abs(yTo - yFrom);
 			if (yTo - yFrom < 0) {
@@ -53,7 +52,7 @@ public class QueenMoveValidator implements PieceTypeMoveValidator {
 			} else {
 				yDirection = 1;
 			}
-		// if queen is travelling diagonally
+		// direction if queen is moving diagonally
 		} else {
 			lengthOfPath = Math.abs(xTo - xFrom);
 			if (xTo - xFrom < 0) {
@@ -67,7 +66,7 @@ public class QueenMoveValidator implements PieceTypeMoveValidator {
 				yDirection = 1;
 			}
 		}
-
+		// check the path
 		if (lengthOfPath - 1 > 0) {
 
 			int xToCheck = xFrom + (1 * xDirection);

@@ -3,7 +3,6 @@ package com.capgemini.chess.algorithms.implementation.moves;
 import com.capgemini.chess.algorithms.data.Coordinate;
 import com.capgemini.chess.algorithms.data.generated.Board;
 import com.capgemini.chess.algorithms.implementation.PieceTypeMoveValidator;
-import com.capgemini.chess.algorithms.implementation.exceptions.moves.BishopInvalidMoveException;
 import com.capgemini.chess.algorithms.implementation.exceptions.moves.RookInvalidMoveException;
 
 public class RookMoveValidator implements PieceTypeMoveValidator {
@@ -34,14 +33,14 @@ public class RookMoveValidator implements PieceTypeMoveValidator {
 		int xDirection = 0;
 		int yDirection = 0;
 
-		// if Rook moves horizontally
+		// direction if Rook is moving horizontally
 		if (xTo - xFrom != 0 && yFrom == yTo) {
 			lengthOfPath = Math.abs(xTo - xFrom);
 			if (xTo - xFrom < 0) {
 				xDirection = -1;
 			} else
 				xDirection = 1;
-		// if Rook moves vertically
+			// direction if Rook is moving vertically
 		} else {
 			lengthOfPath = Math.abs(yTo - yFrom);
 			if (yTo - yFrom < 0) {
@@ -50,8 +49,8 @@ public class RookMoveValidator implements PieceTypeMoveValidator {
 				yDirection = 1;
 			}
 		}
-		
 
+		// check the path
 		if (lengthOfPath - 1 > 0) {
 
 			int xToCheck = xFrom + (1 * xDirection);

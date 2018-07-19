@@ -11,13 +11,13 @@ public class KingMoveValidator implements PieceTypeMoveValidator {
 	public void validateIfMoveIsValid(Coordinate from, Coordinate to) throws KingInvalidMoveException {
 		int xFrom = from.getX();
 		int yFrom = from.getY();
-		
+
 		int xTo = to.getX();
 		int yTo = to.getY();
-		
+
 		int xDiff = Math.abs(xFrom - xTo);
 		int yDiff = Math.abs(yFrom - yTo);
-		
+
 		if ((xDiff > 1) || (yDiff > 1))
 			throw new KingInvalidMoveException("Invalid King move");
 	}
@@ -26,7 +26,5 @@ public class KingMoveValidator implements PieceTypeMoveValidator {
 	public void validatePath(Board board, Coordinate from, Coordinate to) throws KingInvalidMoveException {
 		// King can move only one place so we only need to check "to" coordinate
 	}
-
-	
 
 }
